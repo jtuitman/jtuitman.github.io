@@ -1,0 +1,42 @@
+################################################################
+# zeta functions of hyperelliptic curves over prime fields Fp  #
+################################################################
+
+//////////////////////////////////////////////////////
+// using Magma: (also works over non-prime fields!) //
+// uses naive count if p is large: wrong            //
+//////////////////////////////////////////////////////
+
+p:=NextPrime(10^3);                                               // for 10^4 takes ages...
+Fp:=FiniteField(p);
+R<x>:=PolynomialRing(Fp);
+f:=x^5-4*x+4;      
+H:=HyperellipticCurve(f);                                         // genus 2 hyperelliptic curve y^2=f(x)
+chi:=Numerator(ZetaFunction(H));                                  // numerator of zeta function of curve
+chi;
+
+########################################################
+# using standard Kedlaya's algorithm (hidden) in SAGE: #
+########################################################
+
+from sage.schemes.hyperelliptic_curves.monsky_washnitzer import matrix_of_frobenius_hyperelliptic
+p=(10^3).next_prime()
+R.<x>=Integers(p)['x']
+f=x^5-4*x+4                                                       # genus 2 hyperelliptic curve y^2=f(x)
+F,bla=matrix_of_frobenius_hyperelliptic(f,p,5)                    # initial precision p^5 should be enough
+chi=(((F.characteristic_polynomial()).reverse()).lift()).mod(p^3) # numerator of zeta function of curve mod p^5
+chi
+
+#############################################################################
+# using sqrt(p) improvement of Kedlaya's algorithm by David Harvey in SAGE: #
+#############################################################################
+                      
+p=(10^3).next_prime()
+R.<x>=GF(p)['x']
+f=x^5-4*x+4
+H=HyperellipticCurve(f)                                            # genus 2 hyperelliptic curve y^2=f(x)
+chi=(H.frobenius_polynomial()).reverse()                           # why does frobenius polynomial have to be reversed?
+chi
+
+
+################################################################
